@@ -1,0 +1,132 @@
+from pathlib import Path
+import zipfile, textwrap, os
+
+base = Path("/mnt/data/pbjs_vercel_landing_amendment")
+(base / "app").mkdir(parents=True, exist_ok=True)
+(base / "components").mkdir(parents=True, exist_ok=True)
+
+page_tsx = r'''import Footer from "@/components/Footer";
+
+export default function Home() {
+  return (
+    <main className="min-h-screen bg-[#063d2f] text-white">
+      <section className="px-6 py-24 md:px-16 lg:px-24">
+        <div className="mx-auto max-w-6xl">
+          <p className="mb-4 text-sm uppercase tracking-[0.35em] text-[#d7b56d]">
+            Palm Beach Jet Services
+          </p>
+
+          <h1 className="max-w-4xl text-5xl font-semibold tracking-tight md:text-7xl">
+            Private Aviation. Personal Service. National Reach. Palm Beach Expertise.
+          </h1>
+
+          <p className="mt-8 max-w-3xl text-lg leading-8 text-white/85">
+            Palm Beach Jet Services provides charter, aircraft management, acquisition,
+            and ownership advisory solutions for discerning travelers, aircraft owners,
+            and family offices throughout Palm Beach, South Florida, and beyond.
+          </p>
+
+          <p className="mt-5 max-w-3xl text-lg leading-8 text-white/85">
+            Leveraging a nationwide network of operators and aviation professionals,
+            we deliver tailored solutions with the responsiveness, discretion, and
+            attention of a boutique firm.
+          </p>
+
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <a
+              href="/contact"
+              className="rounded-full bg-[#d7b56d] px-7 py-3 text-center font-medium text-[#063d2f]"
+            >
+              Request a Charter Quote
+            </a>
+            <a
+              href="/contact"
+              className="rounded-full border border-white/40 px-7 py-3 text-center font-medium text-white"
+            >
+              Speak With an Aviation Advisor
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Existing landing page sections go here */}
+
+      <Footer />
+    </main>
+  );
+}
+'''
+
+footer_tsx = r'''export default function Footer() {
+  return (
+    <footer className="bg-[#042d24] px-6 py-12 text-white md:px-16 lg:px-24">
+      <div className="mx-auto max-w-6xl">
+        <div className="border-t border-[#d7b56d]/60 pt-8">
+          <p className="mb-6 text-center text-lg font-medium text-[#d7b56d]">
+            Private Aviation. Personal Service. National Reach. Palm Beach Expertise.
+          </p>
+
+          <div className="mx-auto max-w-5xl space-y-4 text-center text-xs leading-6 text-white/70">
+            <p>© 2026 Palm Beach Jet Services. All Rights Reserved.</p>
+
+            <p>
+              Palm Beach Jet Services and its affiliated entities are not direct air
+              carriers and do not operate aircraft. Palm Beach Jet Services acts solely
+              as an air charter broker, arranging air transportation on behalf of its
+              clients.
+            </p>
+
+            <p>
+              All charter flights are operated by properly licensed U.S.
+              FAA-certificated or foreign Civil Aviation Authority (CAA) certificated
+              air carriers that exercise full operational control of each flight.
+              Aircraft are operated under the respective Air Operator Certificate (AOC)
+              or Air Carrier Certificate of the direct operating carrier.
+            </p>
+
+            <p>
+              Palm Beach Jet Services does not own, operate, maintain, or control
+              aircraft. All aircraft and flight crews are provided by independent
+              third-party air carriers that maintain all required certifications,
+              approvals, and insurance coverage.
+            </p>
+
+            <p className="pt-2 text-white/60">
+              Terms &amp; Conditions | Privacy Policy | Charter Broker Disclosure
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+'''
+
+readme = '''Palm Beach Jet Services landing page amendment
+
+Files included:
+- app/page.tsx
+- components/Footer.tsx
+
+How to use:
+1. Copy app/page.tsx into your Next.js app folder.
+2. Copy components/Footer.tsx into your components folder.
+3. Commit to GitHub.
+4. Vercel will redeploy automatically if your GitHub repo is connected.
+
+This adds:
+- New tagline: Private Aviation. Personal Service. National Reach. Palm Beach Expertise.
+- Updated homepage body copy.
+- Footer disclaimer for charter broker / non-air-carrier disclosure.
+'''
+
+(base / "app" / "page.tsx").write_text(page_tsx)
+(base / "components" / "Footer.tsx").write_text(footer_tsx)
+(base / "README.txt").write_text(readme)
+
+zip_path = Path("/mnt/data/pbjs_vercel_landing_amendment.zip")
+with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+    for p in base.rglob("*"):
+        z.write(p, p.relative_to(base.parent))
+
+print(f"Created: {zip_path}")
